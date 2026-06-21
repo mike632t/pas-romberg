@@ -29,7 +29,7 @@ PROGRAM simpson(output);
 CONST
    LOWER = -3.0;     { Lower bound of integration }
    UPPER = 3.0;      { Upper bound of integration }
-   MAX   = 20;       { Maximum number of refinements }
+   MAX   = 12;       { Maximum number of refinements }
    LIMIT = 5E-12;    { Convergence tolerance }
 
 VAR
@@ -39,42 +39,42 @@ VAR
 
 FUNCTION Fn(x : DOUBLE) : DOUBLE;  { Function to be integrated }
 BEGIN
-   {Fn := sin(x);  { f(x) = sin(x) }
-   {Fn := 1.0 / x;  { f(x) = 1 / x }
-   Fn := exp(x); {F(x) := exp(x)}
+   {Fn := sin(x);    { f(x) = sin(x) }
+   {Fn := 1.0 / x;   { f(x) = 1 / x }
+   Fn := exp(x);     {F(x) := exp(x)}
 END;
 
 FUNCTION simpson(FUNCTION op(x : DOUBLE) : DOUBLE; a, b : DOUBLE; max : INTEGER) : DOUBLE;
 
 VAR
-   h  : DOUBLE;   { Step size }
-   s0 : DOUBLE;   { Odd-indexed sum }
-   s1 : DOUBLE;   { Even-indexed sum }
-   p  : DOUBLE;   { Previous estimate }
-   c  : DOUBLE;   { Current estimate }
-   d  : DOUBLE;   { Difference }
-   i, j, n: INTEGER;  { Loop counters }
+   h  : DOUBLE;      { Step size }
+   s0 : DOUBLE;      { Odd-indexed sum }
+   s1 : DOUBLE;      { Even-indexed sum }
+   p  : DOUBLE;      { Previous estimate }
+   c  : DOUBLE;      { Current estimate }
+   d  : DOUBLE;      { Difference }
+   i, j, n: INTEGER; { Loop counters }
 
 BEGIN
-   n := 2;  { Start with 2 intervals (must be even) }
+   n := 2;  { Start with the minimum valid number of intervals (must be even) }
    h := (b - a) / n;
 
-   p := op(a) + op(b);
-   p := p + 4.0 * op(a + h);
+   
+   p := op(a) + op(b) + 4.0 * op(a + h);  { Initial Simpson approximation using 2 intervals }
    p := p * h / 3.0;
 
-   i := 1;
+   i := 1;  { Iteration counter }
 
    REPEAT
       i := i + 1;
 
-      n := n * 2;         { Double intervals each iteration }
-      h := (b - a) / n;
+      n := n * 2;  { Double number of intervals each iteration }
+      h := (b - a) / n;  { Recompute step size }
 
       s0 := 0.0;
       s1 := 0.0;
 
-      FOR j := 1 TO n - 1 DO
+      FOR j := 1 TO n - 1 DO  { Evaluate function at all interior nodes }
       BEGIN
          IF (j MOD 2 = 0) THEN
             s1 := s1 + op(a + j * h)
@@ -82,12 +82,12 @@ BEGIN
             s0 := s0 + op(a + j * h);
       END;
 
-      c := op(a) + op(b) + 4.0 * s0 + 2.0 * s1;
+      c := op(a) + op(b) + 4.0 * s0 + 2.0 * s1;  { Simpson's rule f(a) + f(b) + 4*odd + 2*even }
       c := c * h / 3.0;
-      d := ABS(c - p);
-      WRITELN('I=', i:2, '     R= ', c:22:15);
-      p := c;
+      d := ABS(c - p);  { Delta from previous iteration }
+      p := c;  { Update previous estimate }
 
+      WRITELN('I=', i:2, '     R= ', c:22:15);
    UNTIL (i >= max) OR (d < LIMIT);
 
    WRITELN;

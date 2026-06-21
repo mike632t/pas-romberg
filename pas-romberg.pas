@@ -40,9 +40,9 @@ VAR
    
 FUNCTION Fn(x : DOUBLE) : DOUBLE;  { Function to be integrated. }
 BEGIN
-   {Fn := sin(x);  { f(x) = sin(x) }
-   {Fn := 1.0 / x;  { f(x) = 1 / x }
-   Fn := exp(x); {F(x) := exp(x)}
+   {Fn := sin(x);    { f(x) = sin(x) }
+   {Fn := 1.0 / x;   { f(x) = 1 / x }
+   Fn := exp(x);     {F(x) := exp(x)}
 END;
 
 FUNCTION romberg(FUNCTION op(x : DOUBLE) : DOUBLE; a, b : DOUBLE; max : INTEGER) : DOUBLE;
@@ -50,11 +50,11 @@ FUNCTION romberg(FUNCTION op(x : DOUBLE) : DOUBLE; a, b : DOUBLE; max : INTEGER)
 VAR
    R  : ARRAY [1..SIZE, 1..SIZE] OF DOUBLE;
   
-   h  : DOUBLE;   { Step size for current refinement }
-   s0 : DOUBLE;   { f(a) + f(b), reused each iteration }
-   s  : DOUBLE;   { Running sum of interior points }
-   f  : DOUBLE;   { Richardson scaling factor (4^k) }
-   d  : DOUBLE;   { Difference between estimates }
+   h  : DOUBLE;      { Step size }
+   s0 : DOUBLE;      { f(a) + f(b), reused each iteration }
+   s  : DOUBLE;      { Running sum of interior points }
+   f  : DOUBLE;      { Richardson scaling factor (4^k) }
+   d  : DOUBLE;      { Difference between estimates }
    i, j, k, n : INTEGER;  { Loop counters }
 
 BEGIN
