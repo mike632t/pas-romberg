@@ -58,7 +58,6 @@ VAR
 BEGIN
    n := 2;  { Start with the minimum valid number of intervals (must be even) }
    h := (b - a) / n;
-
    
    p := op(a) + op(b) + 4.0 * op(a + h);  { Initial Simpson approximation using 2 intervals }
    p := p * h / 3.0;
@@ -74,7 +73,7 @@ BEGIN
       s0 := 0.0;
       s1 := 0.0;
 
-      FOR j := 1 TO n - 1 DO  { Evaluate function at all interior nodes }
+      FOR j := 1 TO n - 1 DO  { Evaluate function ateach interval }
       BEGIN
          IF (j MOD 2 = 0) THEN
             s1 := s1 + op(a + j * h)
